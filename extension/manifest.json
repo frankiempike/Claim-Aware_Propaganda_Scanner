@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "Claim-Aware Propaganda Scanner",
+  "version": "0.1.0",
+  "description": "Scans web page content for propaganda and evaluates claims.",
+  "permissions": [
+    "activeTab",
+    "scripting"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Propaganda Scanner"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
+}

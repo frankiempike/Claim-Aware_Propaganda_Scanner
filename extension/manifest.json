@@ -5,7 +5,8 @@
   "description": "Scans web page content for propaganda and evaluates claims.",
   "permissions": [
     "activeTab",
-    "scripting"
+    "scripting",
+    "tabs"
   ],
   "action": {
     "default_popup": "popup.html",

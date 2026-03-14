@@ -45,7 +45,7 @@ MANIFEST
 *.spec
 
 # Ignore the entire models directory
-models/
+models/*
 
 # Installer logs
 pip-log.txt

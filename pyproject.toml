@@ -18,6 +18,9 @@ classifiers = [
 requires-python = "~=3.13.0"
 
 
+[tool.poetry.scripts]
+create_pipeline = "src.run_semeval_create_pipeline:main"
+
 [tool.ruff]
 line-length = 99
 src = ["claim_aware_propaganda_scanner"]

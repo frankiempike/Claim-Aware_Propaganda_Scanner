@@ -1,18 +1,12 @@
 import os
 import json
-from torch import nn, torch
+from torch import torch
 import pandas as pd
-import numpy as np
 from pathlib import Path
-from transformers import AutoTokenizer, AutoModelForTokenClassification, TrainingArguments, Trainer, DataCollatorForTokenClassification
-from sklearn.metrics import precision_recall_fscore_support
-from datasets import Dataset
-import evaluate
-import tqdm
+from transformers import AutoTokenizer, AutoModelForTokenClassification
 from tqdm.auto import tqdm as tqdm_auto
 tqdm_auto.pandas()
 from accelerate.state import AcceleratorState
-from transformers.utils.notebook import NotebookProgressCallback
 AcceleratorState._reset_state()
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"

@@ -28,9 +28,6 @@ def get_features(df):
 
 #Define paths
 BASE_DIR = Path("..").resolve()
-
-print(f"Base directory: {BASE_DIR}")
-
 INTERIM_DIR = BASE_DIR / "data" / "interim"
 PROCESSED_DIR = BASE_DIR / "data" / "processed"
 
@@ -43,18 +40,21 @@ semeval_si_grouped = semeval_si.groupby(['article_id', 'text_content']).agg({
     'start_char': list,
     'end_char': list
 }).reset_index()
+
+#Group spans by article because final model will only be given article/webpage full text, not spans
 semeval_si_grouped['propaganda_offsets'] = semeval_si_grouped.apply(
     lambda x: list(zip(x['start_char'], x['end_char'])), axis=1
 )
 semeval_si_grouped = semeval_si_grouped.rename(columns={'text_content': 'text'})
-semeval_si_grouped = semeval_si_grouped.drop(columns=['start_char', 'end_char'])
 
 semeval_si_cleaned = semeval_si_grouped.copy()
 semeval_si_cleaned['propaganda_offsets'] = semeval_si_cleaned['propaganda_offsets'].apply(json.dumps)
 
+# Save cleaned SI data for model training
 output_path = BASE_DIR / "data" / "processed" / "semeval_si_cleaned.csv"
 semeval_si_cleaned.to_csv(output_path, index=False)
 
+# Save cleaned TC data for tc model training and future analysis
 semeval_tc = pd.read_csv(INTERIM_DIR / "semeval_task2_tc_merged.csv")
 semeval_tc['span_text'] = semeval_tc.apply(lambda row: row['text_content'][row['start_char']:row['end_char']], axis=1)
 semeval_tc['technique'] = semeval_tc['technique'].fillna('Unknown')

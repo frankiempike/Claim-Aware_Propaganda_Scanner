@@ -4,12 +4,13 @@ from pathlib import Path
 
 
 def main():
+    print(f"Running SemEval pipeline...")
     src_dir = Path(__file__).parent
 
     scripts = [
         src_dir / "data-pull.py",
         src_dir / "semeval-clean.py",
-        src_dir / "semeval-create-model.py",
+        src_dir / "semeval-create-si-model.py",
     ]
 
     for script in scripts:

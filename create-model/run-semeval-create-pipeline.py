@@ -11,6 +11,7 @@ def main():
         src_dir / "data-pull.py",
         src_dir / "semeval-clean.py",
         src_dir / "semeval-create-si-model.py",
+        src_dir / "semeval-create-specialist-model.py"
     ]
 
     for script in scripts:

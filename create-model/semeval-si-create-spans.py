@@ -20,12 +20,13 @@ BASE_DIR = Path("..")
 DATA_DIR = BASE_DIR / "data" / "processed"
 MODEL_DIR = BASE_DIR / "models" / "semeval_roberta_scanner"
 
-def main():
+
+def process_text(text):
     print(f"Loading existing trained model from: {MODEL_DIR}")
     model = AutoModelForTokenClassification.from_pretrained(MODEL_DIR)
-    model_already_trained = True
+    
+    model_checkpoint = "roberta-base"
+    tokenizer = AutoTokenizer.from_pretrained(model_checkpoint, add_prefix_space=True)
 
-if __name__ == "__main__":
-    main()
-
+    
 

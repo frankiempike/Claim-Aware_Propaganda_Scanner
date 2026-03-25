@@ -175,5 +175,13 @@ def get_raw_datasets():
 
 def get_tokenized_datasets():
     raw_dataset = get_raw_datasets()
-    tokenized_datasets = raw_dataset.map(tokenize_and_align_labels, batched=True, remove_columns=raw_dataset.column_names).train_test_split(test_size=0.2, seed=42)
+    tokenized_samples = []
+    for sample in raw_dataset:
+        tokenized_sample = tokenize_and_align_labels({
+            "text": [sample["text"]], 
+            "propaganda_offsets": [sample["propaganda_offsets"]]
+        })
+        tokenized_samples.append(tokenized_sample)
+    tokenized_dataset = Dataset.from_dict({key: [s[key] for s in tokenized_samples] for key in tokenized_samples[0].keys()})
+    tokenized_datasets = tokenized_dataset.train_test_split(test_size=0.2, seed=42)
     return tokenized_datasets

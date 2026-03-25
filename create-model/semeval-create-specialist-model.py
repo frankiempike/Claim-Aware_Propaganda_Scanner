@@ -86,25 +86,25 @@ for i in range(len(tokenized_datasets["train"])):
     cur_ids, cur_attn, cur_lbls = [], [], []
     in_found_span = False
 
-    for j in range(len(input_ids)):
-        print(f"Processing token {j+1}/{len(input_ids)} for article {i+1}...", end="\r")
-        if attn_mask[j] == 0:
+    for input_id in range(len(input_ids)):
+        print(f"Processing token {input_id+1}/{len(input_ids)} for article {i+1}...", end="\r")
+        if attn_mask[input_id] == 0:
             continue
 
-        l = labels[j]
-        p = preds[j]
+        cur_label = labels[input_id]
+        cur_pred = preds[input_id]
 
-        if l != -100:
-            in_found_span = (l > 0) and (p > 0)
+        if cur_label != -100:
+            in_found_span = (cur_label > 0) and (cur_pred > 0)
 
         if in_found_span:
             if len(cur_ids) > 0:
                 save_chunk(cur_ids, cur_attn, cur_lbls, tokenized_datasets, missed_chunks, clean_chunks)
                 cur_ids, cur_attn, cur_lbls = [], [], []
         else:
-            cur_ids.append(input_ids[j])
-            cur_attn.append(attn_mask[j])
-            cur_lbls.append(l)
+            cur_ids.append(input_ids[input_id])
+            cur_attn.append(attn_mask[input_id])
+            cur_lbls.append(cur_label)
 
     if len(cur_ids) > 0:
         print(f"Saving final chunk for article {i+1}...", end="\r")

@@ -8,7 +8,7 @@ from transformers import (AutoTokenizer, AutoModelForTokenClassification, Traini
 from accelerate.state import AcceleratorState
 from datasets import Dataset
 import numpy as np
-from helpers import WeightedTrainer, compute_metrics, tokenize_and_align_labels, compute_metrics, get_si_metrics
+from helpers import WeightedTrainer, compute_metrics, get_tokenized_datasets, compute_metrics
 AcceleratorState._reset_state()
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
@@ -60,26 +60,7 @@ training_args = TrainingArguments(
     load_best_model_at_end=True
 )
 
-tokenized_rows = []
-
-for row in raw_dataset:
-    encoded = tokenize_and_align_labels(
-        {"text": [row["text"]], "propaganda_offsets": [row["propaganda_offsets"]]}
-    )
-
-    n_chunks = len(encoded["input_ids"])
-    for i in range(n_chunks):
-        tokenized_rows.append(
-            {
-                "input_ids": encoded["input_ids"][i],
-                "attention_mask": encoded["attention_mask"][i],
-                "offset_mapping": encoded["offset_mapping"][i],
-                "labels": encoded["labels"][i],
-            }
-        )
-
-tokenized_dataset = Dataset.from_list(tokenized_rows)
-tokenized_datasets = tokenized_dataset.train_test_split(test_size=0.2, seed=42)
+tokenized_datasets = get_tokenized_datasets()
 
 trainer = WeightedTrainer(
     model=model,

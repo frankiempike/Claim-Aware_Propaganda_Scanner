@@ -7,6 +7,10 @@ from transformers import AutoTokenizer, Trainer
 from accelerate.state import AcceleratorState
 from datasets import Dataset
 import numpy as np
+import gdown
+import shutil
+import zipfile
+import os
 
 def tokenize_and_align_labels(examples):
     tokenizer = AutoTokenizer.from_pretrained("roberta-base", add_prefix_space=True)
@@ -40,6 +44,20 @@ def tokenize_and_align_labels(examples):
 
     tokenized_inputs["labels"] = labels
     return tokenized_inputs
+
+def compute_metrics_tc(p):
+    """Compute metrics for multi-label technique classification (2D logits)."""
+    from sklearn.metrics import f1_score, precision_score, recall_score
+    logits, labels = p
+    probs = 1 / (1 + np.exp(-logits))  # sigmoid
+    predictions = (probs >= 0.5).astype(int)
+    labels = np.array(labels).astype(int)
+    return {
+        "precision": precision_score(labels, predictions, average="micro", zero_division=0),
+        "recall": recall_score(labels, predictions, average="micro", zero_division=0),
+        "f1": f1_score(labels, predictions, average="micro", zero_division=0),
+        "macro_f1": f1_score(labels, predictions, average="macro", zero_division=0),
+    }
 
 def compute_metrics(p):
     BASE_DIR = Path("..")
@@ -100,9 +118,14 @@ class WeightedTrainer(Trainer):
 
         #Prioritize Recall: Propaganda classes weighted 3x more than background (0)
         num_labels = self.model.config.num_labels
-        weights = torch.tensor([1.0] + [3.0] * (num_labels - 1), device=model.device)
-        loss_fct = nn.CrossEntropyLoss(weight=weights)
-        loss = loss_fct(logits.view(-1, self.model.config.num_labels), labels.view(-1))
+
+        # weights = torch.tensor([1.0] + [3.0] * (num_labels - 1), device=model.device)
+        # loss_fct = nn.CrossEntropyLoss(weight=weights)
+        # loss = loss_fct(logits.view(-1, self.model.config.num_labels), labels.view(-1))
+
+        pos_weights = torch.tensor([1.0] + [3.0] * (num_labels - 1), device=model.device)
+        loss_fct = nn.BCEWithLogitsLoss(pos_weight=pos_weights)
+        loss = loss_fct(logits, labels.float())
 
         return (loss, outputs) if return_outputs else loss
 
@@ -165,6 +188,84 @@ def save_chunk(ids, attn, lbls, tokenized_datasets, missed_chunks, clean_chunks)
             clean_chunks["attention_mask"].append(attn)
             clean_chunks["labels"].append(lbls)
 
+def setup_models_from_gdrive(file_id, target_path):
+    target_path = Path(target_path).resolve()
+    zip_temp = target_path.with_suffix(".zip")
+
+    #Check if files already exist in the correct spot
+    if (target_path / "model.safetensors").exists() or (target_path / "pytorch_model.bin").exists():
+        print(f"Model weights detected locally at {target_path}")
+        return True
+
+    print(f"Model not found. Preparing {target_path}...")
+
+    #Ensure the specific sub-folder exists
+    target_path.mkdir(exist_ok=True, parents=True)
+
+    url = f'https://drive.google.com/uc?id={file_id}'
+
+    try:
+        #1. Download the zip
+        gdown.download(url, str(zip_temp), quiet=False)
+
+        #2. Extract to a temporary location
+        temp_extract = target_path / "temp_extraction"
+        if temp_extract.exists(): shutil.rmtree(temp_extract)
+        temp_extract.mkdir(parents=True)
+
+        print("Unzipping and cleaning up structure...")
+        with zipfile.ZipFile(zip_temp, 'r') as zip_ref:
+            members = [m for m in zip_ref.namelist() if "__MACOSX" not in m]
+            zip_ref.extractall(temp_extract, members=members)
+
+        #3. Move files from temp_extract into target_path
+        for root, dirs, files in os.walk(temp_extract):
+            for file in files:
+                src_file = Path(root) / file
+                dest_file = target_path / file
+                shutil.move(str(src_file), str(dest_file))
+
+        #4. Final Cleanup
+        shutil.rmtree(temp_extract)
+        if zip_temp.exists():
+            os.remove(zip_temp)
+
+        print(f"Model files are now in: {target_path}")
+        return True
+
+    except Exception as e:
+        print(f"Error during setup: {e}")
+        if zip_temp.exists(): os.remove(zip_temp)
+        return False
+    
+def preprocess_function(examples, tokenizer, window_size=200):
+    contextualized_inputs = []
+
+    for i in range(len(examples["span_text"])):
+        span = str(examples["span_text"][i])
+        full_text = str(examples["text_content"][i])
+
+        #Get the exact character positions
+        start_idx = int(examples["start"][i])
+        end_idx = int(examples["end"][i])
+
+        #Slice the string to get the text immediately before and after the span
+        before_context = full_text[max(0, start_idx - window_size) : start_idx]
+
+        #min(len(), ...) prevents errors if the span is at the very end
+        after_context = full_text[end_idx : min(len(full_text), end_idx + window_size)]
+
+        #Reconstruct the string with our markers
+        marked_text = f"{before_context} [SPAN] {span} [/SPAN] {after_context}"
+        contextualized_inputs.append(marked_text)
+
+    #Tokenize the newly windowed strings
+    return tokenizer(
+        contextualized_inputs,
+        truncation=True,
+        padding="max_length",
+        max_length=256
+    )
 
 def get_raw_datasets():
     BASE_DIR = Path("..")
@@ -185,3 +286,4 @@ def get_tokenized_datasets():
     tokenized_dataset = Dataset.from_dict({key: [s[key] for s in tokenized_samples] for key in tokenized_samples[0].keys()})
     tokenized_datasets = tokenized_dataset.train_test_split(test_size=0.2, seed=42)
     return tokenized_datasets
+    

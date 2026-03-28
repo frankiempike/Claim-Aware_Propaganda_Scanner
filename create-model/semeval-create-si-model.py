@@ -17,7 +17,17 @@ os.environ["TOKENIZERS_PARALLELISM"] = "false"
 BASE_DIR = Path("..")
 DATA_DIR = BASE_DIR / "data" / "processed"
 MODEL_DIR = BASE_DIR / "models" / "semeval_roberta_scanner"
-SPECIALIST_DIR = BASE_DIR / "models" / "semeval_roberta_scanner_specialist"
+
+# Check if model artifacts already exist
+if (
+    (MODEL_DIR / "config.json").exists() and
+    (MODEL_DIR / "model.safetensors").exists() and
+    (MODEL_DIR / "tokenizer_config.json").exists() and
+    (MODEL_DIR / "tokenizer.json").exists() and
+    (MODEL_DIR / "training_args.bin").exists()
+):
+    print(f"Model artifacts already exist in {MODEL_DIR}. Exiting.")
+    exit()
 
 #Check for GPU support
 if torch.backends.mps.is_available():

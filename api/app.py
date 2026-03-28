@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from process_text import process_text_si
+from api.process_text import process_text_si, process_text_tc
 
 app = Flask(__name__)
 
@@ -13,11 +13,12 @@ def process():
     if not data or "text" not in data:
         return jsonify({"error": "Missing 'text' field in request body"}), 400
 
-    preds, specialist_preds = process_text_si(data["text"])
-    return jsonify({
-        "predictions": preds.tolist(),
-        "specialist_predictions": specialist_preds.tolist(),
-    })
+    spans = process_text_si(data["text"])
+    result = process_text_tc(data["text"], spans)
+    return jsonify(result), 200
+
+def main():
+    app.run(debug=True)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    main()

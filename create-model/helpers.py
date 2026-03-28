@@ -12,9 +12,11 @@ import shutil
 import zipfile
 import os
 
+# Module-level tokenizer shared across functions
+_tokenizer = AutoTokenizer.from_pretrained("roberta-base", add_prefix_space=True)
+
 def tokenize_and_align_labels(examples):
-    tokenizer = AutoTokenizer.from_pretrained("roberta-base", add_prefix_space=True)
-    tokenized_inputs = tokenizer(
+    tokenized_inputs = _tokenizer(
         examples["text"],
         truncation=True,
         max_length=512,
@@ -59,13 +61,17 @@ def compute_metrics_tc(p):
         "macro_f1": f1_score(labels, predictions, average="macro", zero_division=0),
     }
 
+# Cache for tokenized datasets used by compute_metrics
+_cached_tokenized_datasets = None
+
+def _get_cached_tokenized_datasets():
+    global _cached_tokenized_datasets
+    if _cached_tokenized_datasets is None:
+        _cached_tokenized_datasets = get_tokenized_datasets()
+    return _cached_tokenized_datasets
+
 def compute_metrics(p):
-    BASE_DIR = Path("..")
-    DATA_DIR = BASE_DIR / "data" / "processed"
-    df_si = pd.read_csv(DATA_DIR / "semeval_si_cleaned.csv")
-    raw_dataset = Dataset.from_pandas(df_si)
-    
-    tokenized_datasets = raw_dataset.map(tokenize_and_align_labels, batched=True, remove_columns=raw_dataset.column_names).train_test_split(test_size=0.2, seed=42)
+    tokenized_datasets = _get_cached_tokenized_datasets()
 
     logits, labels = p
     predictions = np.argmax(logits, axis=2) # Default 0.5 threshold
@@ -119,13 +125,9 @@ class WeightedTrainer(Trainer):
         #Prioritize Recall: Propaganda classes weighted 3x more than background (0)
         num_labels = self.model.config.num_labels
 
-        # weights = torch.tensor([1.0] + [3.0] * (num_labels - 1), device=model.device)
-        # loss_fct = nn.CrossEntropyLoss(weight=weights)
-        # loss = loss_fct(logits.view(-1, self.model.config.num_labels), labels.view(-1))
-
-        pos_weights = torch.tensor([1.0] + [3.0] * (num_labels - 1), device=model.device)
-        loss_fct = nn.BCEWithLogitsLoss(pos_weight=pos_weights)
-        loss = loss_fct(logits, labels.float())
+        weights = torch.tensor([1.0] + [3.0] * (num_labels - 1), device=model.device)
+        loss_fct = nn.CrossEntropyLoss(weight=weights)
+        loss = loss_fct(logits.view(-1, self.model.config.num_labels), labels.view(-1))
 
         return (loss, outputs) if return_outputs else loss
 
@@ -276,14 +278,10 @@ def get_raw_datasets():
 
 def get_tokenized_datasets():
     raw_dataset = get_raw_datasets()
-    tokenized_samples = []
-    for sample in raw_dataset:
-        tokenized_sample = tokenize_and_align_labels({
-            "text": [sample["text"]], 
-            "propaganda_offsets": [sample["propaganda_offsets"]]
-        })
-        tokenized_samples.append(tokenized_sample)
-    tokenized_dataset = Dataset.from_dict({key: [s[key] for s in tokenized_samples] for key in tokenized_samples[0].keys()})
-    tokenized_datasets = tokenized_dataset.train_test_split(test_size=0.2, seed=42)
+    tokenized_datasets = raw_dataset.map(
+        tokenize_and_align_labels,
+        batched=True,
+        remove_columns=raw_dataset.column_names
+    ).train_test_split(test_size=0.2, seed=42)
     return tokenized_datasets
     

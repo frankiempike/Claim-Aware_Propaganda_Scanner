@@ -8,7 +8,11 @@ from pathlib import Path
 #Define paths
 BASE_DIR = Path("..").resolve()
 RAW_DIR = BASE_DIR / "data" / "raw"
+if not RAW_DIR.exists():
+    os.makedirs(RAW_DIR, exist_ok=True)
 INTERIM_DIR = BASE_DIR / "data" / "interim"
+if not INTERIM_DIR.exists():
+    os.makedirs(INTERIM_DIR, exist_ok=True)
 
 #Files of interest
 TGZ_PATH = RAW_DIR / "semeval-dataset.tgz"
@@ -16,9 +20,6 @@ SEMEVAL_EXTRACT_DIR = RAW_DIR / "semeval2020_data"
 INTERIM_SI_FILE = INTERIM_DIR / "semeval_task1_si_merged.csv"
 INTERIM_TC_FILE = INTERIM_DIR / "semeval_task2_tc_merged.csv"
 INTERIM_AV_FILE = INTERIM_DIR / "averitec_dev_flattened.csv"
-
-os.makedirs(RAW_DIR, exist_ok=True)
-os.makedirs(INTERIM_DIR, exist_ok=True)
 
 #Check if data is already processed
 if INTERIM_SI_FILE.exists() and INTERIM_TC_FILE.exists() and INTERIM_AV_FILE.exists():

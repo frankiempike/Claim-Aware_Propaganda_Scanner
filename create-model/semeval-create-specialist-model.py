@@ -1,4 +1,7 @@
 
+import os
+os.environ["PYTORCH_MPS_HIGH_WATERMARK_RATIO"] = "0"
+
 import torch
 import numpy as np
 from pathlib import Path
@@ -136,9 +139,22 @@ final_dict = {
 residual_train_dataset = Dataset.from_dict(final_dict)
 print(f"Created 'residual_train_dataset' with {len(residual_train_dataset)} continuous sequences ready for the specialist model.")
 
-# Free the first model and trainer from MPS to avoid OOM
+# Free the first model, trainer, and intermediate data from MPS to avoid OOM
 del trainer
 del model
+del train_preds
+del train_labels
+del missed_chunks
+del clean_chunks
+del missed_list
+del clean_list
+del final_list
+del final_dict
+
+# Keep only the test split needed for eval, then free the rest
+specialist_eval_dataset = tokenized_datasets["test"]
+del tokenized_datasets
+
 AcceleratorState._reset_state(True)
 import gc; gc.collect()
 torch.mps.empty_cache()
@@ -153,8 +169,8 @@ specialist_args = TrainingArguments(
     eval_strategy="epoch",
     save_strategy="epoch",
     learning_rate=2.5e-05,
-    per_device_train_batch_size=4,
-    gradient_accumulation_steps=2,
+    per_device_train_batch_size=2,
+    gradient_accumulation_steps=4,
     num_train_epochs=13,
     weight_decay=0.15,
     logging_steps=5,
@@ -170,7 +186,7 @@ specialist_trainer = WeightedTrainer(
     model=specialist_model,
     args=specialist_args,
     train_dataset=residual_train_dataset,
-    eval_dataset=tokenized_datasets["test"],
+    eval_dataset=specialist_eval_dataset,
     compute_metrics=compute_metrics,
     data_collator=DataCollatorForTokenClassification(tokenizer)
 )

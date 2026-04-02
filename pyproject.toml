@@ -12,6 +12,7 @@ packages = [{include = "api"}, {include = "create-model"}]
 
 
 [tool.poetry.scripts]
+create-gdown = "create-model.gdown-download-models:main"
 create-pipeline = "create-model.run-semeval-create-pipeline:main"
 deploy-flask-app = "api.app:main"
 

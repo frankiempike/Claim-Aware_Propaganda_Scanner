@@ -17,9 +17,9 @@ TC_MODEL_PATH = BASE_DIR / "models" / "semeval_roberta_classifier"
 if not TC_MODEL_PATH.exists():
     TC_MODEL_PATH.mkdir(parents=True)
 
-google_drive_zip_ID = '1lLqG45VR24QxShlwAfkKB1vG9kHpUsx4'
-google_drive_spec_zip_ID = '1O7UmT3L3qfILqdQavAqC7qxzeak86aGX'
-google_drive_tc_context_zip_ID = '1PZXDKzsYcWGRE8U6nGSqq7dDi3F1TpSh'
+google_drive_si_zip_ID = os.getenv('GOOGLE_DRIVE_SI_ZIP_ID')
+google_drive_spec_zip_ID = os.getenv('GOOGLE_DRIVE_SPEC_ZIP_ID')
+google_drive_tc_context_zip_ID = os.getenv('GOOGLE_DRIVE_TC_CONTEXT_ZIP_ID')
 
 
 def setup_models(file_id, target_path):
@@ -76,7 +76,7 @@ def setup_models(file_id, target_path):
 
 
 def main():
-    base_model_exists = setup_models(google_drive_zip_ID, MODEL_DIR)
+    base_model_exists = setup_models(google_drive_si_zip_ID, MODEL_DIR)
     specialist_model_exists = setup_models(google_drive_spec_zip_ID, SPECIALIST_DIR)
     tc_model_exists = setup_models(google_drive_tc_context_zip_ID, TC_MODEL_PATH)
 

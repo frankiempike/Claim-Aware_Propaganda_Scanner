@@ -14,7 +14,7 @@ packages = [{include = "api"}, {include = "create-model"}]
 [tool.poetry.scripts]
 create-gdown = "create-model.gdown-download-models:main"
 create-pipeline = "create-model.run-semeval-create-pipeline:main"
-deploy-flask-app = "api.app:main"
+deploy-flask-app = "api.run-render:main"
 
 [tool.ruff]
 line-length = 99
@@ -60,3 +60,4 @@ torchmetrics = "^1.9.0"
 trafilatura = "^2.0.0"
 xgboost = "^3.2.0"
 python-levenshtein = "^0.27.3"
+gunicorn = "^25.3.0"

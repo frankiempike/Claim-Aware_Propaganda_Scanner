@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, request, jsonify
 from api.process_text import process_text_si, process_text_tc
 
@@ -18,7 +20,8 @@ def process():
     return jsonify(result), 200
 
 def main():
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=True)
 
 if __name__ == "__main__":
     main()

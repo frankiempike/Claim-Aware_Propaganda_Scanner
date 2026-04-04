@@ -1,9 +1,11 @@
 import os
 
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from api.process_text import process_text_si, process_text_tc
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route("/health", methods=["GET"])
 def health():

@@ -10,7 +10,7 @@ SPECIALIST_DIR = BASE_DIR / "models" / "semeval_roberta_scanner_specialist"
 TC_MODEL_DIR = BASE_DIR / "models" / "semeval_roberta_classifier"
 
 CONFIDENCE_THRESHOLD = 0.9
-TC_THRESHOLD = 0.5
+TC_THRESHOLD = 0.33
 WINDOW_SIZE = 200
 
 _tokenizer = None

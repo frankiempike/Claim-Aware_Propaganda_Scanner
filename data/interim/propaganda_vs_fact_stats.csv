@@ -1,0 +1,11 @@
+article_id,total_sentences,count_prop_only,count_fact_only,count_both,count_neither,techniques_in_both,prop_density,fact_density
+758756657,70,13,13,5,39,"Causal_Oversimplification,Flag-Waving,Loaded_Language,Slogans",25.71428571428571,25.71428571428571
+111111132,114,14,19,2,79,"Name_Calling,Labeling,Whataboutism,Straw_Men,Red_Herring",14.035087719298245,18.421052631578945
+790777028,24,4,7,0,13,,16.666666666666664,29.166666666666668
+729348908,36,7,6,1,22,"Exaggeration,Minimisation",22.22222222222222,19.444444444444446
+738207834,181,59,22,3,97,"Loaded_Language,Name_Calling,Labeling",34.25414364640884,13.812154696132598
+701299732,20,2,4,5,9,"Appeal_to_Authority,Appeal_to_fear-prejudice,Name_Calling,Labeling",35.0,45.0
+696694316,82,14,18,5,45,"Appeal_to_fear-prejudice,Bandwagon,Reductio_ad_hitlerum,Black-and-White_Fallacy,Loaded_Language,Thought-terminating_Cliches",23.170731707317074,28.04878048780488
+795703371,37,6,3,2,26,Loaded_Language,21.62162162162162,13.513513513513514
+706600938,42,15,4,1,22,Thought-terminating_Cliches,38.095238095238095,11.904761904761903
+722507879,32,2,14,3,13,"Appeal_to_fear-prejudice,Flag-Waving,Loaded_Language,Whataboutism,Straw_Men,Red_Herring",15.625,53.125

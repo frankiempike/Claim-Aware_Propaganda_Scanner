@@ -1,5 +1,8 @@
 # Data
-/data/
+/data/**/*
+
+# But do NOT ignore this specific stats file
+!/data/interim/propaganda_vs_fact_stats.csv
 
 # Models
 /models/

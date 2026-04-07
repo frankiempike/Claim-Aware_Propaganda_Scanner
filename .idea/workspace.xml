@@ -6,19 +6,23 @@
   <component name="ChangeListManager">
     <list default="true" id="52490225-8096-42cd-bb30-e4870f5e25ec" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/semeval_roberta_scanner/training_args.bin" beforeDir="false" afterPath="$PROJECT_DIR$/models/semeval_roberta_scanner/training_args.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/4.1-fp-semeval-si-modeling.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/4.1-fp-semeval-si-modeling.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/5.1-fp-pipeline-evaluation.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/5.1-fp-pipeline-evaluation.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/create-model/claim_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/create-model/claim_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebooks/5.0-fp-claim_evaluation.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/5.0-fp-claim_evaluation.ipynb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="1837" />
+    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
+  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Jupyter Notebook" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -50,29 +54,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "ai.playground.ignore.import.keys.banner.in.settings": "true",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "database.data.extractors.current.export.id": "Comma-separated (CSV)_id",
-    "git-widget-placeholder": "fp-tc-modeling",
-    "junie.onboarding.icon.badge.shown": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
-    "to.speed.mode.migration.done": "true",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.claim_utils.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;ai.playground.ignore.import.keys.banner.in.settings&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;database.data.extractors.current.export.id&quot;: &quot;Comma-separated (CSV)_id&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;fp/feat/claim__extraction&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -95,6 +100,19 @@
       <workItem from="1773717516374" duration="11454000" />
       <workItem from="1773729717924" duration="4732000" />
       <workItem from="1773785771988" duration="312000" />
+      <workItem from="1775492049349" duration="7671000" />
+      <workItem from="1775503708903" duration="1997000" />
+      <workItem from="1775506004654" duration="1240000" />
+      <workItem from="1775508906548" duration="847000" />
+      <workItem from="1775511396402" duration="594000" />
+      <workItem from="1775512314972" duration="986000" />
+      <workItem from="1775513816686" duration="767000" />
+      <workItem from="1775514669275" duration="1116000" />
+      <workItem from="1775516008445" duration="983000" />
+      <workItem from="1775521597831" duration="1465000" />
+      <workItem from="1775526767058" duration="1541000" />
+      <workItem from="1775534884551" duration="1900000" />
+      <workItem from="1775578747706" duration="2800000" />
     </task>
     <servers />
   </component>
@@ -116,5 +134,8 @@
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/5_1_fp_pipeline_evaluation_ipynb$claim_utils.coverage" NAME="claim_utils Coverage Results" MODIFIED="1775498358418" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/create-model" />
   </component>
 </project>

@@ -78,7 +78,7 @@ def decompose_sentence(sentence):
     if not root:
         return [format_claim(sentence)]
 
-    # . Check if there are any conjunct verbs attached to the root (e.g., joined by "and")
+    #Check if there are any conjunct verbs attached to the root (e.g., joined by "and")
     conjunct_verbs = [t for t in root.children if t.dep_ == "conj" and t.pos_ == "VERB"]
 
     #If there are no compound predicates, return the sentence EXACTLY as is

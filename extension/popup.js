@@ -27,6 +27,21 @@ function createTechniquesTable(spans) {
   return table;
 }
 
+// Restore previous results on popup open
+chrome.storage.local.get("lastResult", ({ lastResult }) => {
+  if (lastResult) {
+    const table = createTechniquesTable(lastResult);
+    const outputDiv = document.getElementById("output");
+    outputDiv.innerHTML = "";
+    outputDiv.appendChild(table);
+  }
+});
+
+document.getElementById("clearBtn").addEventListener("click", () => {
+  chrome.storage.local.remove("lastResult");
+  document.getElementById("output").innerHTML = "";
+});
+
 document.getElementById("scanBtn").addEventListener("click", () => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     chrome.scripting.executeScript(
@@ -52,6 +67,7 @@ document.getElementById("scanBtn").addEventListener("click", () => {
           };
         });
 
+        chrome.storage.local.set({ lastResult: result });
         const table = createTechniquesTable(result);
         const outputDiv = document.getElementById("output");
         outputDiv.innerHTML = "";

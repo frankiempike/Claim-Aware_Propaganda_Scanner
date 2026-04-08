@@ -214,8 +214,6 @@ def process_text_tc(text, spans):
         # Apply sigmoid and threshold
         probabilities = 1 / (1 + np.exp(-logits))
         predicted_labels = (probabilities >= TC_THRESHOLD).astype(int)
-        
-        # Get technique names and probabilities for predicted labels
         technique_predictions = [
             {
                 "technique": _tc_label_names[i],
@@ -223,7 +221,17 @@ def process_text_tc(text, spans):
             }
             for i, pred in enumerate(predicted_labels) if pred == 1
         ]
-        
+
+        # If no techniques passed the threshold, fall back to the highest probability technique
+        if len(technique_predictions) == 0:
+            best_idx = int(np.argmax(probabilities))
+            technique_predictions = [
+                {
+                    "technique": _tc_label_names[best_idx],
+                    "probability": float(probabilities[best_idx])
+                }
+            ]
+
         results.append({
             "start": start_idx,
             "end": end_idx,
@@ -231,5 +239,5 @@ def process_text_tc(text, spans):
             "techniques": technique_predictions,
             "all_probabilities": {_tc_label_names[i]: float(probabilities[i]) for i in range(len(_tc_label_names))}
         })
-    
+
     return results

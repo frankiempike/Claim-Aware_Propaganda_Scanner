@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 from pathlib import Path
 from textblob import TextBlob
@@ -63,6 +65,8 @@ def get_negative_samples(si_df, technique_cols, num_samples=1500):
 BASE_DIR = Path("..").resolve()
 INTERIM_DIR = BASE_DIR / "data" / "interim"
 PROCESSED_DIR = BASE_DIR / "data" / "processed"
+if not PROCESSED_DIR.exists():
+    os.makedirs(PROCESSED_DIR, exist_ok=True)
 
 #Load SemEval span identification data
 semeval_si = pd.read_csv(INTERIM_DIR / "semeval_task1_si_merged.csv")

@@ -6,6 +6,48 @@
 
 Our project detects likely propaganda in news articles and social media posts
 
+## Constructing models
+
+Before you are able to run the api or extension, you have create models
+
+To install libraries, run
+
+```
+poetry install
+```
+
+You can run the following command to build models from scratch, locally
+
+```
+poetry run create-pipeline
+```
+
+OR
+
+You can run the following to download the precreated models from google drive (contact Frankie Pike for access)
+
+```
+poetry run create-gdown
+```
+
+## Starting the API
+
+Start the flask api with the poetry command
+
+```
+poetry run deploy-flask-app
+```
+
+## Setting up and running the extension
+
+In the extension folder, create a new config.js using `config.js.example` as a guide
+
+Then navigate to `chrome://extensions` and click 'Load unpacked'
+
+Select the `extension` directory.
+
+The extension should now be available on your browser.
+
 ## Project Organization
 
 ```

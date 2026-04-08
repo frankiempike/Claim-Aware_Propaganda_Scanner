@@ -12,8 +12,9 @@ packages = [{include = "api"}, {include = "create-model"}]
 
 
 [tool.poetry.scripts]
+create-gdown = "create-model.gdown-download-models:main"
 create-pipeline = "create-model.run-semeval-create-pipeline:main"
-deploy-flask-app = "api.app:main"
+deploy-flask-app = "api.run-render:main"
 
 [tool.ruff]
 line-length = 99
@@ -29,10 +30,35 @@ force-sort-within-sections = true
 
 
 [tool.poetry.dependencies]
-python = "^3.13.0"
+python = ">=3.13.0,<3.15"
 ipykernel = "^7.2.0"
 pandas = "^3.0.1"
 textblob = "^0.19.0"
 matplotlib = "^3.10.8"
 seaborn = "^0.13.2"
 flask = "^3.1.3"
+torch = "^2.11.0"
+transformers = "^5.4.0"
+sentencepiece = ">=0.2.0"
+accelerate = "^1.13.0"
+datasets = "^4.8.4"
+gdown = "^5.2.1"
+beautifulsoup4 = "^4.14.3"
+emoji = "^2.15.0"
+google-api-python-client = "^2.193.0"
+hydra-core = "^1.3.2"
+loguru = "^0.7.3"
+omegaconf = "^2.3.0"
+pytest = "^9.0.2"
+python-dotenv = "^1.2.2"
+pytorch-lightning = "^2.6.1"
+rank-bm25 = "^0.2.2"
+scikit-learn = "^1.8.0"
+scipy = "^1.17.1"
+spacy = "^3.8.14"
+torchmetrics = "^1.9.0"
+trafilatura = "^2.0.0"
+xgboost = "^3.2.0"
+python-levenshtein = "^0.27.3"
+gunicorn = "^25.3.0"
+flask-cors = "^6.0.2"

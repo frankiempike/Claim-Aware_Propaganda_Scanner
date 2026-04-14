@@ -15,6 +15,7 @@ packages = [{include = "api"}, {include = "create-model"}]
 create-gdown = "create-model.gdown-download-models:main"
 create-pipeline = "create-model.run-semeval-create-pipeline:main"
 deploy-flask-app = "api.run-render:main"
+ping-url = "api.ping:main"
 
 [tool.ruff]
 line-length = 99

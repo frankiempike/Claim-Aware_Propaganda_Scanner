@@ -14,7 +14,9 @@ window.createTechniquesTable = function(spans) {
     const textCell = document.createElement("td");
     textCell.textContent = span.text;
     const techniqueCell = document.createElement("td");
-    const techniqueArray = span.techniques.map((item) => item.technique.replaceAll("_", " "));
+    const techniqueArray = span.techniques.map((item) => 
+      `${item.technique.replaceAll("_", " ")} (${(item.probability * 100).toFixed(1)}%)`
+  );
     techniqueCell.textContent = techniqueArray.join(", ");
     row.appendChild(textCell);
     row.appendChild(techniqueCell);

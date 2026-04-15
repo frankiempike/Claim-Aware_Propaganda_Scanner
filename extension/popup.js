@@ -1,50 +1,77 @@
 // Restore previous results on popup open
-chrome.storage.local.get(["lastResult", "fullResult", "pageText", "tabUrl"], ({ lastResult, fullResult, pageText, tabUrl }) => {
-  try {
-    if (lastResult) {
-      const table = createTechniquesTable(lastResult);
-      const outputDiv = document.getElementById("output");
-      outputDiv.innerHTML = "";
-      outputDiv.appendChild(table);
-
-      // Re-highlight propaganda on page if we have the full results, text, and matching URL
-      if (fullResult && pageText && tabUrl) {
-        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-          if (!tabs || tabs.length === 0) {
-            console.warn("No active tab found for re-highlighting");
-            return;
-          }
-
-          if (tabs[0].url === tabUrl) {
-            console.log("Re-highlighting propaganda spans on page with stored results (URL matches)");
-            chrome.scripting.executeScript({
-              target: { tabId: tabs[0].id },
-              func: window.highlightPropagandaSpans,
-              args: [pageText, fullResult],
-            });
-          } else {
-            console.log("URL mismatch - not re-highlighting. Stored:", tabUrl, "Current:", tabs[0].url);
-          }
-        });
-      }
-    }
-  } catch (error) {
-    console.error("Error restoring previous results:", error);
+chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  if (!tabs || tabs.length === 0) {
+    console.warn("No active tab found");
+    return;
   }
+
+  const currentUrl = tabs[0].url;
+  chrome.storage.local.get(["scanResults"], ({ scanResults = {} }) => {
+    try {
+      const urlResults = scanResults[currentUrl];
+      if (urlResults && urlResults.lastResult) {
+        console.log(`Found stored results for URL: ${currentUrl}`);
+        const outputDiv = document.getElementById("output");
+        outputDiv.innerHTML = "";
+
+        if (urlResults.lastResult.length === 0) {
+          // No propaganda detected
+          const messageDiv = document.createElement("div");
+          messageDiv.style.textAlign = "center";
+          messageDiv.style.padding = "20px";
+          messageDiv.style.color = "var(--text-tertiary)";
+          messageDiv.textContent = "No propaganda detected on this page.";
+          outputDiv.appendChild(messageDiv);
+        } else {
+          const table = createTechniquesTable(urlResults.lastResult);
+          outputDiv.appendChild(table);
+        }
+
+        // Re-highlight propaganda on page with stored results
+        if (urlResults.fullResult && urlResults.pageText) {
+          console.log("Re-highlighting propaganda spans on page with stored results");
+          chrome.scripting.executeScript({
+            target: { tabId: tabs[0].id },
+            func: window.highlightPropagandaSpans,
+            args: [urlResults.pageText, urlResults.fullResult],
+          });
+        }
+      } else {
+        // No stored results for this URL
+        const outputDiv = document.getElementById("output");
+        outputDiv.innerHTML = "";
+        const messageDiv = document.createElement("div");
+        messageDiv.style.textAlign = "center";
+        messageDiv.style.padding = "20px";
+        messageDiv.style.color = "var(--text-tertiary)";
+        messageDiv.textContent = "Click 'Scan Page' to analyze this page for propaganda techniques.";
+        outputDiv.appendChild(messageDiv);
+      }
+    } catch (error) {
+      console.error("Error restoring previous results:", error);
+    }
+  });
 });
 
 document.getElementById("clearBtn").addEventListener("click", () => {
-  try {
-    chrome.storage.local.remove(["lastResult", "fullResult", "pageText", "tabUrl"]);
-    document.getElementById("output").innerHTML = "";
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (!tabs || tabs.length === 0) {
+      console.warn("No active tab found");
+      return;
+    }
 
-    // Remove highlights from page
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (!tabs || tabs.length === 0) {
-        console.warn("No active tab found");
-        return;
-      }
+    const currentUrl = tabs[0].url;
+    try {
+      chrome.storage.local.get(["scanResults"], ({ scanResults = {} }) => {
+        // Remove results for current URL
+        delete scanResults[currentUrl];
+        chrome.storage.local.set({ scanResults });
+        console.log(`Cleared scan results for URL: ${currentUrl}`);
+      });
 
+      document.getElementById("output").innerHTML = "";
+
+      // Remove highlights from page
       chrome.scripting.executeScript({
         target: { tabId: tabs[0].id },
         func: () => {
@@ -54,17 +81,17 @@ document.getElementById("clearBtn").addEventListener("click", () => {
           });
         },
       });
-    });
-  } catch (error) {
-    console.error("Error clearing results:", error);
-    const outputDiv = document.getElementById("output");
-    outputDiv.innerHTML = "";
-    const errorDiv = document.createElement("div");
-    errorDiv.style.color = "#d32f2f";
-    errorDiv.style.padding = "10px";
-    errorDiv.innerHTML = `<strong>Error:</strong> Failed to clear results`;
-    outputDiv.appendChild(errorDiv);
-  }
+    } catch (error) {
+      console.error("Error clearing results:", error);
+      const outputDiv = document.getElementById("output");
+      outputDiv.innerHTML = "";
+      const errorDiv = document.createElement("div");
+      errorDiv.style.color = "#d32f2f";
+      errorDiv.style.padding = "10px";
+      errorDiv.innerHTML = `<strong>Error:</strong> Failed to clear results`;
+      outputDiv.appendChild(errorDiv);
+    }
+  });
 });
 
 document.getElementById("scanBtn").addEventListener("click", () => {
@@ -118,8 +145,15 @@ document.getElementById("scanBtn").addEventListener("click", () => {
           }
 
           document.getElementById("output").textContent = "Processing...";
-          const fullText = results[0].result;
+          let fullText = results[0].result;
           console.log("Extracted full page text for processing. Length:", fullText.length);
+          
+          // Limit to 8000 characters
+          const MAX_CHARS = 8000;
+          if (fullText.length > MAX_CHARS) {
+            console.log(`Text exceeds ${MAX_CHARS} characters (${fullText.length}). Truncating...`);
+            fullText = fullText.substring(0, MAX_CHARS);
+          }
           console.log("Full text:", fullText);
           
           const response = await fetch(API_ENDPOINT, {
@@ -151,8 +185,16 @@ document.getElementById("scanBtn").addEventListener("click", () => {
             };
           });
 
-          chrome.storage.local.set({ lastResult: result, fullResult: fullResult, pageText: fullText, tabUrl: currentUrl });
-          console.log("Stored results in local storage for persistence with URL:", currentUrl);
+          // Store results under URL key
+          chrome.storage.local.get(["scanResults"], ({ scanResults = {} }) => {
+            scanResults[currentUrl] = {
+              lastResult: result,
+              fullResult: fullResult,
+              pageText: fullText,
+            };
+            chrome.storage.local.set({ scanResults });
+            console.log(`Stored scan results for URL: ${currentUrl}`);
+          });
 
           console.log("Executing script to highlight propaganda spans on page with new results");
           chrome.scripting.executeScript(
@@ -171,7 +213,18 @@ document.getElementById("scanBtn").addEventListener("click", () => {
           const table = createTechniquesTable(result);
           const outputDiv = document.getElementById("output");
           outputDiv.innerHTML = "";
-          outputDiv.appendChild(table);
+
+          if (result.length === 0) {
+            // No propaganda detected
+            const messageDiv = document.createElement("div");
+            messageDiv.style.textAlign = "center";
+            messageDiv.style.padding = "20px";
+            messageDiv.style.color = "var(--text-tertiary)";
+            messageDiv.textContent = "No propaganda detected on this page (for now).";
+            outputDiv.appendChild(messageDiv);
+          } else {
+            outputDiv.appendChild(table);
+          }
         } catch (error) {
           console.error("Error during scan:", error);
           const outputDiv = document.getElementById("output");

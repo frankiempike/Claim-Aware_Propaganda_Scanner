@@ -1,6 +1,6 @@
 {
   "name": "Propaganda Scanner Extension",
-  "description": "Base Level Extension",
+  "description": "A browser extension that scans web pages for propaganda techniques.",
   "version": "0.1.0",
   "manifest_version": 3,
   "action": {

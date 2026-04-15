@@ -148,11 +148,10 @@ document.getElementById("scanBtn").addEventListener("click", () => {
           let fullText = results[0].result;
           console.log("Extracted full page text for processing. Length:", fullText.length);
           
-          // Limit to 8000 characters
-          const MAX_CHARS = 8000;
-          if (fullText.length > MAX_CHARS) {
-            console.log(`Text exceeds ${MAX_CHARS} characters (${fullText.length}). Truncating...`);
-            fullText = fullText.substring(0, MAX_CHARS);
+          // Limit to characters to prevent crashes (from config.js)
+          if (typeof MAX_TEXT_LENGTH !== "undefined" && fullText.length > MAX_TEXT_LENGTH) {
+            console.log(`Text exceeds ${MAX_TEXT_LENGTH} characters (${fullText.length}). Truncating...`);
+            fullText = fullText.substring(0, MAX_TEXT_LENGTH);
           }
           console.log("Full text:", fullText);
           

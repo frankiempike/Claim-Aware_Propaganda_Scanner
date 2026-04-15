@@ -1,3 +1,47 @@
+// Extract main article/content text from the page
+window.extractArticleText = function() {
+  // Try common content selectors in order of preference
+  const contentSelectors = [
+    "article",
+    "main",
+    "[role='main']",
+    ".article",
+    ".post",
+    ".content",
+    "#content",
+    "#article",
+    ".post-content",
+    ".entry-content",
+  ];
+
+  let contentElement = null;
+  for (const selector of contentSelectors) {
+    const elem = document.querySelector(selector);
+    if (elem) {
+      contentElement = elem;
+      break;
+    }
+  }
+
+  // If no content element found, use body but filter out nav/footer/sidebar
+  if (!contentElement) {
+    contentElement = document.body;
+  }
+
+  // Get text and clean it
+  let text = contentElement.innerText || contentElement.textContent || "";
+
+  // Basic cleanup: remove extra whitespace, but preserve paragraphs
+  text = text
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0)
+    .join("\n");
+
+  // Return at least some text, even if minimal
+  return text.length > 0 ? text : "Unable to extract article text";
+};
+
 window.highlightPropagandaSpansInPage = function(fullPageText, propagandaSpans) {
   if (!Array.isArray(propagandaSpans) || propagandaSpans.length === 0) {
     return;

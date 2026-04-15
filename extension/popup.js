@@ -19,9 +19,7 @@ chrome.storage.local.get(["lastResult", "fullResult", "pageText", "tabUrl"], ({ 
             console.log("Re-highlighting propaganda spans on page with stored results (URL matches)");
             chrome.scripting.executeScript({
               target: { tabId: tabs[0].id },
-              func: (pageText, spans) => {
-                window.highlightPropagandaSpansInPage(pageText, spans);
-              },
+              func: window.highlightPropagandaSpans,
               args: [pageText, fullResult],
             });
           } else {
@@ -76,11 +74,41 @@ document.getElementById("scanBtn").addEventListener("click", () => {
       {
         target: { tabId: tabs[0].id },
         func: () => {
-          // Try to use extractArticleText if available, fallback to body
-          if (typeof window.extractArticleText === 'function') {
-            return window.extractArticleText();
+          // Embedded extraction logic
+          const contentSelectors = [
+            "article",
+            "main",
+            "[role='main']",
+            ".article",
+            ".post",
+            ".content",
+            "#content",
+            "#article",
+            ".post-content",
+            ".entry-content",
+          ];
+
+          let contentElement = null;
+          for (const selector of contentSelectors) {
+            const elem = document.querySelector(selector);
+            if (elem) {
+              contentElement = elem;
+              break;
+            }
           }
-          return document.body.innerText;
+
+          if (!contentElement) {
+            contentElement = document.body;
+          }
+
+          let text = contentElement.innerText || contentElement.textContent || "";
+          text = text
+            .split("\n")
+            .map((line) => line.trim())
+            .filter((line) => line.length > 0)
+            .join("\n");
+
+          return text.length > 0 ? text : "Unable to extract article text";
         },
       },
       async (results) => {
@@ -92,7 +120,7 @@ document.getElementById("scanBtn").addEventListener("click", () => {
           document.getElementById("output").textContent = "Processing...";
           const fullText = results[0].result;
           console.log("Extracted full page text for processing. Length:", fullText.length);
-          console.log("Full text:", fullText.substring(0, 500), "...");
+          console.log("Full text:", fullText);
           
           const response = await fetch(API_ENDPOINT, {
             method: "POST",
@@ -130,9 +158,7 @@ document.getElementById("scanBtn").addEventListener("click", () => {
           chrome.scripting.executeScript(
             {
               target: { tabId: tabs[0].id },
-              func: (pageText, spans) => {
-                window.highlightPropagandaSpansInPage(pageText, spans);
-              },
+              func: window.highlightPropagandaSpans,
               args: [fullText, fullResult],
             },
             (scriptResults) => {

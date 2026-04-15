@@ -92,17 +92,36 @@ window.highlightPropagandaSpansInPage = function(fullPageText, propagandaSpans) 
         if (excludedParents.includes(parentNodeName)) continue;
 
         let nodeText = node.textContent;
+        
+        // Find all valid matches (complete words only)
+        const matches = [];
         let index = nodeText.indexOf(searchText);
+        while (index !== -1) {
+          // Check word boundaries
+          const beforeChar = index > 0 ? nodeText[index - 1] : " ";
+          const afterIndex = index + searchText.length;
+          const afterChar = afterIndex < nodeText.length ? nodeText[afterIndex] : " ";
+          
+          const isWordCharBefore = /\w/.test(beforeChar);
+          const isWordCharAfter = /\w/.test(afterChar);
+          
+          // Only match if it's a complete word
+          if (!isWordCharBefore && !isWordCharAfter) {
+            matches.push({ start: index, end: afterIndex });
+          }
+          
+          index = nodeText.indexOf(searchText, index + 1);
+        }
 
-        // Highlight all occurrences in this text node
-        if (index !== -1) {
+        // Highlight all valid matches
+        if (matches.length > 0) {
           const fragments = [];
           let lastIndex = 0;
 
-          while (index !== -1) {
+          matches.forEach((match) => {
             // Add text before match
-            if (index > lastIndex) {
-              fragments.push(document.createTextNode(nodeText.slice(lastIndex, index)));
+            if (match.start > lastIndex) {
+              fragments.push(document.createTextNode(nodeText.slice(lastIndex, match.start)));
             }
 
             // Create highlight mark
@@ -115,9 +134,8 @@ window.highlightPropagandaSpansInPage = function(fullPageText, propagandaSpans) 
             mark.textContent = searchText;
             fragments.push(mark);
 
-            lastIndex = index + searchText.length;
-            index = nodeText.indexOf(searchText, lastIndex);
-          }
+            lastIndex = match.end;
+          });
 
           // Add remaining text
           if (lastIndex < nodeText.length) {

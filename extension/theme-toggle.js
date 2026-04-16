@@ -2,8 +2,8 @@
 chrome.storage.local.get(["darkMode"], ({ darkMode }) => {
   if (darkMode) {
     document.body.classList.add("dark-mode");
-    updateThemeButton();
   }
+  updateThemeButton();
 });
 
 // Theme toggle button handler

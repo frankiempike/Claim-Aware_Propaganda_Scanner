@@ -1,15 +1,25 @@
 {
-  "name": "Hello Extensions",
-  "description": "Base Level Extension",
-  "version": "1.0",
+  "name": "Propaganda Scanner Extension",
+  "description": "A browser extension that scans web pages for propaganda techniques.",
+  "version": "0.1.0",
   "manifest_version": 3,
   "action": {
-    "default_popup": "hello.html",
-    "default_icon": "hello_extensions.png"
+    "default_popup": "popup.html",
+    "default_icon": "extension-icon.png"
   },
   "permissions": [
     "activeTab",
     "scripting",
     "storage"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["page-helpers.js"],
+      "run_at": "document_start"
+    }
   ]
 }

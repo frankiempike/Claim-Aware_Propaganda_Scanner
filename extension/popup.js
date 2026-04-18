@@ -17,9 +17,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         if (urlResults.lastResult.length === 0) {
           // No propaganda detected
           const messageDiv = document.createElement("div");
-          messageDiv.style.textAlign = "center";
-          messageDiv.style.padding = "20px";
-          messageDiv.style.color = "var(--text-tertiary)";
+          messageDiv.classList.add("message-div");
           messageDiv.textContent = "No propaganda detected on this page.";
           outputDiv.appendChild(messageDiv);
         } else {
@@ -41,9 +39,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         const outputDiv = document.getElementById("output");
         outputDiv.innerHTML = "";
         const messageDiv = document.createElement("div");
-        messageDiv.style.textAlign = "center";
-        messageDiv.style.padding = "20px";
-        messageDiv.style.color = "var(--text-tertiary)";
+        messageDiv.classList.add("message-div");
         messageDiv.textContent = "Click 'Scan Page' to analyze this page for propaganda techniques.";
         outputDiv.appendChild(messageDiv);
       }
@@ -86,8 +82,7 @@ document.getElementById("clearBtn").addEventListener("click", () => {
       const outputDiv = document.getElementById("output");
       outputDiv.innerHTML = "";
       const errorDiv = document.createElement("div");
-      errorDiv.style.color = "#d32f2f";
-      errorDiv.style.padding = "10px";
+      errorDiv.classList.add("error-div");
       errorDiv.innerHTML = `<strong>Error:</strong> Failed to clear results`;
       outputDiv.appendChild(errorDiv);
     }
@@ -216,9 +211,7 @@ document.getElementById("scanBtn").addEventListener("click", () => {
           if (result.length === 0) {
             // No propaganda detected
             const messageDiv = document.createElement("div");
-            messageDiv.style.textAlign = "center";
-            messageDiv.style.padding = "20px";
-            messageDiv.style.color = "var(--text-tertiary)";
+            messageDiv.classList.add("message-div");
             messageDiv.textContent = "No propaganda detected on this page (for now).";
             outputDiv.appendChild(messageDiv);
           } else {
@@ -229,11 +222,7 @@ document.getElementById("scanBtn").addEventListener("click", () => {
           const outputDiv = document.getElementById("output");
           outputDiv.innerHTML = "";
           const errorDiv = document.createElement("div");
-          errorDiv.style.color = "#d32f2f";
-          errorDiv.style.padding = "10px";
-          errorDiv.style.backgroundColor = "#ffebee";
-          errorDiv.style.borderRadius = "4px";
-          errorDiv.style.marginTop = "10px";
+          errorDiv.classList.add("error-div");
           errorDiv.innerHTML = `<strong>Error:</strong> ${error.message}`;
           outputDiv.appendChild(errorDiv);
         }

@@ -148,31 +148,61 @@ document.getElementById("scanBtn").addEventListener("click", () => {
           let fullText = results[0].result;
           console.log("Extracted full page text for processing. Length:", fullText.length);
           
-          // Limit to characters to prevent crashes (from config.js)
-          if (typeof MAX_TEXT_LENGTH !== "undefined" && fullText.length > MAX_TEXT_LENGTH) {
-            console.log(`Text exceeds ${MAX_TEXT_LENGTH} characters (${fullText.length}). Truncating...`);
-            fullText = fullText.substring(0, MAX_TEXT_LENGTH);
+          // Split text into chunks (from config.js)
+          const chunkSize = typeof MAX_TEXT_LENGTH !== "undefined" ? MAX_TEXT_LENGTH : 5000;
+          const chunks = [];
+          for (let i = 0; i < fullText.length; i += chunkSize) {
+            chunks.push(fullText.substring(i, i + chunkSize));
           }
-          console.log("Full text:", fullText);
           
-          const response = await fetch(API_ENDPOINT, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ text: fullText }),
-          });
-
-          if (!response.ok) {
-            throw new Error(`API error: ${response.status} ${response.statusText}`);
-          }
-
-          const data = await response.json();
+          console.log(`Processing ${chunks.length} chunk(s) of ~${chunkSize} characters each`);
           
-          if (!Array.isArray(data)) {
-            throw new Error("Invalid API response format");
+          // Process each chunk and combine results
+          let allResults = [];
+          let charOffset = 0;
+          
+          for (let i = 0; i < chunks.length; i++) {
+            // Add 2 second pause between requests (not before first request)
+            if (i > 0) {
+              console.log("Waiting 2 seconds before next chunk...");
+              await new Promise(resolve => setTimeout(resolve, 2000));
+            }
+            
+            console.log(`Processing chunk ${i + 1}/${chunks.length}`);
+            document.getElementById("output").textContent = `Processing... (${i + 1}/${chunks.length})`;
+            
+            const response = await fetch(API_ENDPOINT, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ text: chunks[i] }),
+            });
+
+            if (!response.ok) {
+              throw new Error(`API error on chunk ${i + 1}: ${response.status} ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            
+            if (!Array.isArray(data)) {
+              throw new Error(`Invalid API response format for chunk ${i + 1}`);
+            }
+            
+            // Adjust positions for chunks beyond the first
+            if (i > 0) {
+              data.forEach(item => {
+                item.start += charOffset;
+                item.end += charOffset;
+              });
+            }
+            
+            allResults = allResults.concat(data);
+            charOffset += chunks[i].length;
           }
 
+          const data = allResults;
+          
           // Keep full results with positions for highlighting
           const fullResult = data;
           

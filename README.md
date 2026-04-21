@@ -6,6 +6,14 @@
 
 Addressing **SemEval-2020 Task 11**, this project provides a high-performance framework for detecting likely propaganda techniques in news articles. While many projects remain theoretical, this repository includes a functional **Chrome Extension** to bring model inference into real-world browsing.
 
+### Table of Contents
+* [Key Features](#key-features)
+* [The Task](#the-task-semeval-2020-task-11)
+* [Running the Code](#running-the-code)
+* [Data Access](#data-access)
+* [Dependency Management](#dependency-management)
+* [Project Organization](#project-organization)
+
 ## Key Features
 
 - **High-Performance Models:** Benchmarked against SemEval-2020 Task 11, our models outperform previous competition attempts in identifying fine-grained propaganda techniques.
@@ -18,9 +26,6 @@ Addressing **SemEval-2020 Task 11**, this project provides a high-performance fr
 Propaganda uses psychological and rhetorical techniques to influence audiences. Our models address two primary subtasks:
 1. **Span Identification (SI):** Highlighting the specific text fragments where propaganda occurs.
 2. **Technique Classification (TC):** Labeling fragments with one of 14 techniques (e.g., *Loaded Language, Appeal to Fear, Slogans, etc.*).
-
-Let me dig deeper into the key files and directories.Let me fetch the key source files directly.Let me try to access more of the repo's key files directly.Now let me fetch the notebooks directory listing and API files.Now let me look at the api and create-model directories.Now let me check the SemEval and AveriTec licensing info.I have now read, in depth: the full `README.md`, `pyproject.toml`, `requirements.txt`, `Makefile`, and the project structure. I understand the two data sources (SemEval-2020 Task 11 and AVeriTeC), verified their licenses, and understand the Poetry setup. Below is the new README content you should add (drop it into your existing README wherever the relevant sections belong).
-
 
 ## Running the Code
 
@@ -110,7 +115,7 @@ The claim-extraction component draws on the **AVeriTeC** dataset, a corpus of 4,
 
 This repository does not redistribute either dataset. All data use in this project respects the licenses stated above.
 
-## Dependency Management: `poetry.lock` vs. `requirements.txt`
+## Dependency Management
 
 This repo ships **both** `poetry.lock` and `requirements.txt`. Here is what each is for and when to use which:
 

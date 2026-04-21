@@ -44,29 +44,31 @@ Propaganda uses psychological and rhetorical techniques to influence audiences. 
 ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
 │
 ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
+    │
 │   └── figures        <- Generated graphics and figures to be used in reporting
 │
 ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
 │                         generated with `pip freeze > requirements.txt`
 │
 └── create-model       <- Source code for use in this project.
-    ├── claim-utils.py                <- Lightweight claim extraction logic (Claimify-inspired)
     │
-    ├── data-pull.py                  <- Scripts to download and prepare raw data
+    ├── claim-utils.py                     <- Lightweight claim extraction logic (Claimify-inspired)
     │
-    ├── gdown-download-models.py      <- Utility to fetch pre-trained weights via Google Drive
+    ├── data-pull.py                       <- Scripts to download and prepare raw data
     │
-    ├── helpers.py                    <- General utilities and model pipeline processing endpoints
+    ├── gdown-download-models.py           <- Utility to fetch pre-trained weights via Google Drive
     │
-    ├── is-subjective.py              <- Feature engineering: specialized subjectivity detection
+    ├── helpers.py                         <- General utilities and model pipeline processing endpoints
     │
-    ├── run-semeval-create-pipeline.py <- Orchestration script for the end-to-end model pipeline
+    ├── is-subjective.py                   <- Feature engineering: specialized subjectivity detection
     │
-    ├── semeval-clean.py              <- Data preprocessing and text cleaning scripts
+    ├── run-semeval-create-pipeline.py     <- Orchestration script for the end-to-end model pipeline
     │
-    ├── semeval-create-si-model.py     <- Code for Span Identification (SI) task
+    ├── semeval-clean.py                   <- Data preprocessing and text cleaning scripts
     │
-    ├── semeval-create-tc-model.py     <- Code for Technique Classification (TC) task
+    ├── semeval-create-si-model.py         <- Code for Span Identification (SI) task
+    │
+    ├── semeval-create-tc-model.py         <- Code for Technique Classification (TC) task
     │
     └── semeval-create-specialist-model.py <- Specialist model to help with SI on types that are frequently missed
 ```

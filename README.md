@@ -33,9 +33,7 @@ Propaganda uses psychological and rhetorical techniques to influence audiences. 
 │   └── raw            <- The original, immutable data dump.
 │
 ├── docs               <- A default mkdocs project; see www.mkdocs.org for details
-│
-├── models             <- Trained and serialized models, model predictions, or model summaries
-│
+││
 ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
 │                         the creator's initials, and a short `-` delimited description, e.g.
 │                         `1.0-jqp-initial-data-exploration`.
@@ -50,25 +48,27 @@ Propaganda uses psychological and rhetorical techniques to influence audiences. 
 │
 ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
 │                         generated with `pip freeze > requirements.txt`
-│
-├── setup.cfg          <- Configuration file for flake8
-│
-└── claim_aware_propaganda_scanner   <- Source code for use in this project.
+││
+└── create-model       <- Source code for use in this project.
+    ├── claim-utils.py                <- Lightweight claim extraction logic (Claimify-inspired)
     │
-    ├── __init__.py             <- Makes claim_aware_propaganda_scanner a Python module
+    ├── data-pull.py                  <- Scripts to download and prepare raw data
     │
-    ├── config.py               <- Store useful variables and configuration
+    ├── gdown-download-models.py      <- Utility to fetch pre-trained weights via Google Drive
     │
-    ├── dataset.py              <- Scripts to download or generate data
+    ├── helpers.py                    <- General utilities and model pipeline processing endpoints
     │
-    ├── features.py             <- Code to create features for modeling
+    ├── is-subjective.py              <- Feature engineering: specialized subjectivity detection
     │
-    ├── modeling                
-    │   ├── __init__.py 
-    │   ├── predict.py          <- Code to run model inference with trained models          
-    │   └── train.py            <- Code to train models
+    ├── run-semeval-create-pipeline.py <- Orchestration script for the end-to-end model pipeline
     │
-    └── plots.py                <- Code to create visualizations
+    ├── semeval-clean.py              <- Data preprocessing and text cleaning scripts
+    │
+    ├── semeval-create-si-model.py     <- Code for Span Identification (SI) task
+    │
+    ├── semeval-create-tc-model.py     <- Code for Technique Classification (TC) task
+    │
+    └── semeval-create-specialist-model.py <- Specialist model to help with SI on types that are frequently missed
 ```
 
 --------

@@ -39,25 +39,76 @@ cd Claim-Aware_Propaganda_Scanner
 poetry install
 ```
 
+#### Running the full model pipeline from scratch
+
+Then, populate you need to make the models available to your machine.
+
+You have the option to build the models locally on your machine:
+
+```bash
+# Build all models end-to-end (SI model, TC model, specialist model)
+poetry run create-pipeline
+```
+
+OR download the pre-built model weights from Google Drive (contact Frankie Pike for access to the Drive link):
+
+To do this you need to set these variables in the environment file
+
+```bash
+GOOGLE_DRIVE_SI_ZIP_ID = '<GOOGLE DRIVE ID FOR SPAN IDENTIFICATION MODEL>'
+GOOGLE_DRIVE_SPEC_ZIP_ID = '<GOOGLE DRIVE ID FOR SPECIALIZATION MODEL>'
+GOOGLE_DRIVE_TC_CONTEXT_ZIP_ID = '<GOOGLE DRIVE ID FOR TECHNIQUE CLASSIFICATION MODEL>'
+```
+
+We provide the Google Drive ID's we used for our models in our .env.example. If you choose to make your own models and host them on Google Drive, you can replace those values with the Google Drive ID's of your own models.
+
+If you have trouble accessing our models, contact Frankie Pike at frankiep@umich.edu.
+
+```bash
+poetry run create-gdown
+```
+
 #### Quickstart: scan a string of text for propaganda
 
-Once you have a model available (either built locally or downloaded via gdown), you can run inference directly against the Flask API. Start the server:
+Once you have the models available (either built locally or downloaded via gdown), you can run inference directly against the Flask API. Start the server:
 
 ```bash
 poetry run deploy-flask-app
 ```
 
-Then in a second terminal, send a text snippet to the `/predict` endpoint:
+Then in a second terminal, send a text snippet to the `/process` endpoint:
 
 ```bash
-curl -X POST http://localhost:5000/predict \
+curl -X POST http://localhost:5000/process \
   -H "Content-Type: application/json" \
   -d '{"text": "They are coming for your children. Real patriots know the truth and will not be silenced."}'
 ```
 
 The API will return a JSON response indicating which spans (if any) were identified as propaganda and, for those spans, which of the 14 SemEval techniques (e.g. *Loaded Language*, *Appeal to Fear*, *Name Calling*, etc.) were detected.
 
-If you have not started the Flask server, you can also interact with the Chrome extension directly against a locally running instance once `deploy-flask-app` is active.
+If you have started the Flask server, you can also interact with the Chrome extension directly against a locally running instance once `deploy-flask-app` is active.
+
+#### Running the extension locally
+
+First you need to create a `config.js` from the example:
+
+```javascript
+const API_ENDPOINT = "http://localhost:5000/process";
+
+const MAX_TEXT_LENGTH = 5000; // Limit text length to prevent crashes
+```
+
+Then you need to open Google Chrome and visit `chrome://extensions`.
+
+Turn on Developer Mode using the toggle in the upper right corner.
+
+Then click "Load Unpacked" and select the `extension` directory.
+
+The Propaganda Scanner Extension should then show up as a panel on the screen.
+
+Make sure the extension is enabled via the toggle in the lower right corner of the panel. The Icon for the Propaganda scanner should show up in the browsere frame, next to the address bar.
+
+To use the extension, visit a page you want scanned and click on the extension and then "Scan Page." Wait for the extension to finish processing. A table of all techniques found should show up on a table in the extension and text flagged as propaganda on the page should be highlighted.
 
 #### Running the Jupyter Notebooks
 
@@ -77,19 +128,6 @@ The notebooks follow the naming convention `<step>.<substep>-<author-initials>-<
 - **Claim extraction experiments:** using the Claimify-inspired pipeline to identify core factual assertions
 
 > **Note:** Some notebooks require the data to be present under `data/raw/`. See the [Data Access](#data-access) section below for how to obtain it.
-
-#### Running the full model pipeline from scratch
-
-```bash
-# Build all models end-to-end (SI model, TC model, specialist model)
-poetry run create-pipeline
-```
-
-Or download the pre-built model weights from Google Drive (contact Frankie Pike for access to the Drive link):
-
-```bash
-poetry run create-gdown
-```
 
 ## Data Access
 

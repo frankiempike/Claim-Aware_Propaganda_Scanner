@@ -10,7 +10,7 @@ Addressing **SemEval-2020 Task 11**, this project provides a high-performance fr
 
 - **High-Performance Models:** Benchmarked against SemEval-2020 Task 11, our models outperform previous competition attempts in identifying fine-grained propaganda techniques.
 - **Real-Time Chrome Extension:** A browser tool that scans the active page, sending text to our models to highlight potential propaganda fragments in situ.
-- **Claim-Aware Extraction:** A lightweight claim extraction tool—heavily inspired by *Microsoft's Claimify*—designed to identify core assertions and prepare text for fact-checking.
+- **Claim-Aware Extraction:** A lightweight claim extraction tool—heavily inspired by Microsoft's Claimify—designed to identify core assertions and prepare text for fact-checking.
 - **End-to-End EDA:** Extensive Exploratory Data Analysis notebooks that visualize linguistic patterns and technique distributions across the SemEval dataset.
 
 ## The Task: SemEval-2020 Task 11

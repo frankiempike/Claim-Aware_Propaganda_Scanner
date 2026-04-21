@@ -52,7 +52,7 @@ poetry run create-pipeline
 
 OR download the pre-built model weights from Google Drive (contact Frankie Pike for access to the Drive link):
 
-To do this you need to set these variables in the environment file
+To do this you need to set these variables in the `.env` file
 
 ```bash
 GOOGLE_DRIVE_SI_ZIP_ID = '<GOOGLE DRIVE ID FOR SPAN IDENTIFICATION MODEL>'
@@ -60,7 +60,7 @@ GOOGLE_DRIVE_SPEC_ZIP_ID = '<GOOGLE DRIVE ID FOR SPECIALIZATION MODEL>'
 GOOGLE_DRIVE_TC_CONTEXT_ZIP_ID = '<GOOGLE DRIVE ID FOR TECHNIQUE CLASSIFICATION MODEL>'
 ```
 
-We provide the Google Drive ID's we used for our models in our .env.example. If you choose to make your own models and host them on Google Drive, you can replace those values with the Google Drive ID's of your own models.
+We provide the Google Drive ID's we used for our models in our `.env.example`. If you choose to make your own models and host them on Google Drive, you can replace those values with the Google Drive ID's of your own models.
 
 If you have trouble accessing our models, contact Frankie Pike at frankiep@umich.edu.
 

@@ -41,7 +41,7 @@ poetry install
 
 #### Quickstart: scan a string of text for propaganda
 
-Once you have a model available (either built locally or downloaded via gdown — see [Constructing models](#constructing-models) above), you can run inference directly against the Flask API. Start the server:
+Once you have a model available (either built locally or downloaded via gdown), you can run inference directly against the Flask API. Start the server:
 
 ```bash
 poetry run deploy-flask-app

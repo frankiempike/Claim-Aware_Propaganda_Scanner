@@ -33,7 +33,7 @@ Propaganda uses psychological and rhetorical techniques to influence audiences. 
 │   └── raw            <- The original, immutable data dump.
 │
 ├── docs               <- A default mkdocs project; see www.mkdocs.org for details
-││
+│
 ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
 │                         the creator's initials, and a short `-` delimited description, e.g.
 │                         `1.0-jqp-initial-data-exploration`.
@@ -48,7 +48,7 @@ Propaganda uses psychological and rhetorical techniques to influence audiences. 
 │
 ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
 │                         generated with `pip freeze > requirements.txt`
-││
+│
 └── create-model       <- Source code for use in this project.
     ├── claim-utils.py                <- Lightweight claim extraction logic (Claimify-inspired)
     │

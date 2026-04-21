@@ -23,25 +23,25 @@ Propaganda uses psychological and rhetorical techniques to influence audiences. 
 
 
 ```
-├── LICENSE            <- Open-source license if one is chosen
-├── Makefile           <- Makefile with convenience commands like `make data` or `make train`
-├── README.md          <- The top-level README for developers using this project.
+├── LICENSE            <- License
+├── Makefile           <- Makefile with convenience commands
+├── README.md          <- The top-level README for developers using this project
 ├── data
-│   ├── external       <- Data from third party sources.
-│   ├── interim        <- Intermediate data that has been transformed.
-│   ├── processed      <- The final, canonical data sets for modeling.
-│   └── raw            <- The original, immutable data dump.
+│   ├── external       <- Data from third party sources
+│   ├── interim        <- Intermediate data that has been transformed
+│   ├── processed      <- The final, canonical data sets for modeling
+│   └── raw            <- The original, immutable data dump
 │
 ├── docs               <- A default mkdocs project; see www.mkdocs.org for details
 │
 ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
 │                         the creator's initials, and a short `-` delimited description, e.g.
-│                         `1.0-jqp-initial-data-exploration`.
+│                         `1.0-jqp-initial-data-exploration`
 │
 ├── pyproject.toml     <- Project configuration file with package metadata for 
-│                         claim_aware_propaganda_scanner and configuration for tools like black
+│                         claim_aware_propaganda_scanner and configuration
 │
-├── references         <- Data dictionaries, manuals, and all other explanatory materials.
+├── references         <- Data dictionaries, manuals, and all other explanatory materials
 │
 ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
     │
@@ -50,7 +50,7 @@ Propaganda uses psychological and rhetorical techniques to influence audiences. 
 ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
 │                         generated with `pip freeze > requirements.txt`
 │
-└── create-model       <- Source code for use in this project.
+└── create-model       <- Source code for use in this project
     │
     ├── claim-utils.py                     <- Lightweight claim extraction logic (Claimify-inspired)
     │

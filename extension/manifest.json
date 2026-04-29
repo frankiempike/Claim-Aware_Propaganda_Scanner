@@ -1,7 +1,7 @@
 {
   "name": "Propaganda Scanner Extension",
   "description": "A browser extension that scans web pages for propaganda techniques.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "manifest_version": 3,
   "action": {
     "default_popup": "popup.html",
